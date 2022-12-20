@@ -1,5 +1,8 @@
 package com.bosonit.batch_temperatura.config;
 
+import com.bosonit.batch_temperatura.domain.Weather;
+import com.bosonit.batch_temperatura.domain.WeatherRisk;
+import com.bosonit.batch_temperatura.job.WeatherItemProcessor;
 import com.bosonit.batch_temperatura.job.WeatherItemReader;
 import com.bosonit.batch_temperatura.job.WeatherItemWriter;
 import org.springframework.batch.core.Job;
@@ -14,6 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import java.nio.file.Watchable;
+import java.util.function.Function;
+
 @Configuration
 @EnableBatchProcessing
 public class ConfigBatch {
@@ -25,13 +31,15 @@ public class ConfigBatch {
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public WeatherItemReader reader(){
-        return new WeatherItemReader();
+    public WeatherItemReader reader(){return new WeatherItemReader();
+    }
+    @Bean
+    public WeatherItemWriter writerRead(){return new WeatherItemWriter();
     }
 
     @Bean
-    public WeatherItemWriter writerRead(){
-        return new WeatherItemWriter();
+    public WeatherItemProcessor processor() {
+        return new WeatherItemProcessor();
     }
 
     @Value("classpath*:/input/data*.csv")
@@ -39,18 +47,21 @@ public class ConfigBatch {
 
 
     @Bean
-    public Job readCSVTemperature(){
+    public Job readCSVTemperature(Step step){
         return jobBuilderFactory.get("job1")
                 .incrementer(new RunIdIncrementer())
-                .start(step1())
+                .start(step)
                 .build();
 
     }
-
-    private Step step1() {
+    @Bean
+    public Step step(WeatherItemReader reader,WeatherItemWriter writer/*, WeatherItemProcessor processor*/) {
         return stepBuilderFactory.get("step1")
-                .chunk(100)
-                .reader(reader()).writer()
+                .<Weather, WeatherRisk>chunk(100)
+                .reader(reader)
+//                .processor(processor)
+                .writer(writer)
+                .build();
     }
 
 
