@@ -1,6 +1,6 @@
-package com.bosonit.batch_temperatura.domain;
+package com.bosonit.batch_temperatura.domain.weaterRisk;
 
-import lombok.AllArgsConstructor;
+import com.bosonit.batch_temperatura.domain.weater.Weather;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,21 +26,21 @@ public class WeatherRisk {
     private Integer numberMeasurements;
     private Integer year;
     private double AverageTemperature;
-    private int risk;
+    private String risk;
 
-    @OneToOne
-    private Weather weather;
+//    @OneToOne
+//    private Weather weather;
 
     public WeatherRisk(String location
                         , Integer month
                         , Integer year
-                        , int risk
+                        , String risk
                         , Weather weather) {
         this.location = location;
         this.month = month;
         this.year = year;
         this.risk = risk;
-        this.weather = weather;
+//        this.weather = weather;
     }
 
     public Long getId() {

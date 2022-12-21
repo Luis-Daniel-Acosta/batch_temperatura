@@ -1,4 +1,4 @@
-package com.bosonit.batch_temperatura.domain;
+package com.bosonit.batch_temperatura.domain.weater;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

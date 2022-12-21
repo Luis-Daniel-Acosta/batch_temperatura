@@ -1,6 +1,6 @@
 package com.bosonit.batch_temperatura.repository;
 
-import com.bosonit.batch_temperatura.domain.WeatherRisk;
+import com.bosonit.batch_temperatura.domain.weaterRisk.WeatherRisk;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -24,7 +24,7 @@ public class BatchTemperaturaApplication {
 		SpringApplication.run(BatchTemperaturaApplication.class, args);
 	}
 
-	@Scheduled(cron = "0 */5 * * * ?")
+	@Scheduled(cron = "0 */1 * * * ?")
 	public void perform() throws Exception
 	{
 		JobParameters params = new JobParametersBuilder()
