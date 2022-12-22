@@ -1,6 +1,6 @@
 package com.bosonit.batch_temperatura.listener;
 
-import com.bosonit.batch_temperatura.domain.weaterRisk.WeatherRisk;
+import com.bosonit.batch_temperatura.domain.weatherRisk.WeatherRisk;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.batch.core.ItemWriteListener;
 

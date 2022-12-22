@@ -1,10 +1,10 @@
 package com.bosonit.batch_temperatura.job.step3;
 
-import com.bosonit.batch_temperatura.domain.weaterRisk.WeatherRisk;
-import com.bosonit.batch_temperatura.domain.weaterRisk.WeatherRiskDto;
+import com.bosonit.batch_temperatura.domain.weatherRisk.WeatherRisk;
+import com.bosonit.batch_temperatura.domain.weatherRisk.WeatherRiskDto;
 import org.springframework.batch.item.ItemProcessor;
 
-public class WeaterItemProcessorStep3 implements ItemProcessor<WeatherRiskDto, WeatherRisk> {
+public class WeatherItemProcessorStep3 implements ItemProcessor<WeatherRiskDto, WeatherRisk> {
 
 
     @Override

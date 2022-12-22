@@ -1,6 +1,6 @@
 package com.bosonit.batch_temperatura.job.step3;
 
-import com.bosonit.batch_temperatura.domain.weaterRisk.WeatherRiskDto;
+import com.bosonit.batch_temperatura.domain.weatherRisk.WeatherRiskDto;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -1,6 +1,6 @@
 package com.bosonit.batch_temperatura.job.step1;
 
-import com.bosonit.batch_temperatura.domain.weater.Weather;
+import com.bosonit.batch_temperatura.domain.weather.Weather;
 import org.springframework.batch.item.ItemProcessor;
 
 public class WeatherItemProcessor implements ItemProcessor<Weather, Weather> {

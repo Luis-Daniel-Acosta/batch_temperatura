@@ -1,6 +1,6 @@
 package com.bosonit.batch_temperatura.job;
 
-import com.bosonit.batch_temperatura.domain.weater.Weather;
+import com.bosonit.batch_temperatura.domain.weather.Weather;
 import com.bosonit.batch_temperatura.repository.RepositoryWeather;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;

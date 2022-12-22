@@ -1,6 +1,6 @@
-package com.bosonit.batch_temperatura.domain.weaterRisk;
+package com.bosonit.batch_temperatura.domain.weatherRisk;
 
-import com.bosonit.batch_temperatura.domain.weater.WeatherDto;
+import com.bosonit.batch_temperatura.domain.weather.WeatherDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
