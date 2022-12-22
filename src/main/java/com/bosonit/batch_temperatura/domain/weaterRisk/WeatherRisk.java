@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
-//@AllArgsConstructor
 @Entity
 public class WeatherRisk {
 
@@ -23,24 +22,30 @@ public class WeatherRisk {
 
     private String location;
     private Integer month;
+    @Column(name="numbermeasurements")
     private Integer numberMeasurements;
     private Integer year;
-    private double AverageTemperature;
+    @Column(name="averagetemperature")
+    private double averageTemperature;
     private String risk;
 
-//    @OneToOne
-//    private Weather weather;
+    @OneToOne
+    private Weather weather;
 
     public WeatherRisk(String location
                         , Integer month
                         , Integer year
                         , String risk
+                        ,Integer numberMeasurements
+                        ,double averageTemperature
                         , Weather weather) {
         this.location = location;
         this.month = month;
         this.year = year;
         this.risk = risk;
-//        this.weather = weather;
+        this.numberMeasurements= numberMeasurements;
+        this.averageTemperature=averageTemperature;
+        this.weather = weather;
     }
 
     public Long getId() {

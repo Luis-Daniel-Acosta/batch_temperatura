@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * A DTO for the {@link WeatherRisk} entity
  */
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class WeatherRiskDto implements Serializable {
@@ -20,7 +20,7 @@ public class WeatherRiskDto implements Serializable {
     private Integer year;
     private double averageTemperature;
 
-    public WeatherRiskDto(String location, Integer month, Integer numberMeasurements, Integer year, double averageTemperature, int risk) {
+    public WeatherRiskDto(String location, Integer month, Integer numberMeasurements, Integer year, double averageTemperature) {
 
         this.location = location;
         this.month = month;

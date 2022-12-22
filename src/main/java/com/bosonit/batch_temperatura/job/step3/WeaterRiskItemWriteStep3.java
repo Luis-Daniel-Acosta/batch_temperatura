@@ -14,6 +14,7 @@ public class WeaterRiskItemWriteStep3 implements ItemWriter<WeatherRisk> {
 
     @Override
     public void write(List<? extends WeatherRisk> list) throws Exception {
+
         repositoryWeatherRisk.saveAll(list);
 
     }

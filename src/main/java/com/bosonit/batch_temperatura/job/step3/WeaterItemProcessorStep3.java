@@ -4,7 +4,7 @@ import com.bosonit.batch_temperatura.domain.weaterRisk.WeatherRisk;
 import com.bosonit.batch_temperatura.domain.weaterRisk.WeatherRiskDto;
 import org.springframework.batch.item.ItemProcessor;
 
-public class weaterItemProcessorStep3 implements ItemProcessor<WeatherRiskDto, WeatherRisk> {
+public class WeaterItemProcessorStep3 implements ItemProcessor<WeatherRiskDto, WeatherRisk> {
 
 
     @Override

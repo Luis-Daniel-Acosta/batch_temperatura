@@ -12,7 +12,8 @@ import java.text.SimpleDateFormat;
 @NoArgsConstructor
 @Data
 public class WeatherDto implements Serializable {
-    private Long id;
+
+
     private String location;
     private String date;
     private Integer temperature;
