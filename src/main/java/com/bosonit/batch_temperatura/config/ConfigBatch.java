@@ -87,9 +87,6 @@ public class ConfigBatch {
     public WeaterRiskItemWriteStep3 weaterRiskItemWriteStep3(){return new WeaterRiskItemWriteStep3();}
 
 
-
-
-
     @Value("classpath*:/input/data.csv")
     private Resource[] inputResources;
 
@@ -161,15 +158,13 @@ public class ConfigBatch {
 
     @Bean
     public MultiResourceItemReader<Weather> multiResourceItemReader()
-    {
-        MultiResourceItemReader<Weather> resourceItemReader = new MultiResourceItemReader<Weather>();
+    {    MultiResourceItemReader<Weather> resourceItemReader = new MultiResourceItemReader<Weather>();
         resourceItemReader.setResources(inputResources);
         resourceItemReader.setDelegate(readerr());
         return resourceItemReader;
-
     }
 
-//                                                                       Configuracion de Reader para el paso 1
+//    Configuracion de Reader para el paso 1
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Bean
     public FlatFileItemReader<Weather> readerr()
@@ -199,16 +194,14 @@ public class ConfigBatch {
     }
 
 
-//                                                                         confiuracion WriterDto para el paso 2
+// confiuracion Writer para el paso 2
     public FlatFileItemWriter<WeatherDto> weatherFlatFileItemWriter()
     {
         //Create reader instance
         FlatFileItemWriter<WeatherDto> writeDto = new FlatFileItemWriter<>();
-
         writeDto.setResource(outputResource);
         //All job repetitions should "append" to same output file
         writeDto.setAppendAllowed(true);
-
         //Configure how each line will be parsed and mapped to different values
         writeDto.setLineAggregator(new DelimitedLineAggregator<WeatherDto>() {
             {
@@ -223,15 +216,28 @@ public class ConfigBatch {
         return writeDto;
     }
 
+//    confiuracion Reader para el paso 3
+    @Bean
+    public JdbcCursorItemReader<WeatherRiskDto> jdbcCursorItemReader(){
+        JdbcCursorItemReader<WeatherRiskDto> reader3= new JdbcCursorItemReader<>();
+        reader3.setSql("SELECT weatherRiskDto.location, YEAR(weatherRiskDto.date) as year,MONTH(weatherRiskDto.date) as month, COUNT(weatherRiskDto.temperature) as numberMeasurements, AVG(weatherRiskDto.temperature) as average" +
+                        " FROM weather AS weatherRiskDto "+
+                        "GROUP BY weatherRiskDto.location"
+                /* ",YEAR(weatherRiskDto.date),MONTH(weatherRiskDto.date) ORDER BY weatherRiskDto.location"*/);
+        reader3.setDataSource(dataSource);
+        reader3.setFetchSize(100);
+        reader3.setRowMapper(new RowMapperStep3());
+        return reader3;
+    }
+
+    //confiuracion Writer para el paso 4
     public FlatFileItemWriter<WeatherRisk> weatherRiskFlatFileItemWriter()
     {
         //Create reader instance
         FlatFileItemWriter<WeatherRisk> writeDto = new FlatFileItemWriter<>();
-
         writeDto.setResource(getOutputResource);
         //All job repetitions should "append" to same output file
         writeDto.setAppendAllowed(true);
-
         //Configure how each line will be parsed and mapped to different values
         writeDto.setLineAggregator(new DelimitedLineAggregator<WeatherRisk>() {
             {
@@ -246,19 +252,7 @@ public class ConfigBatch {
         return writeDto;
     }
 
-    @Bean
-    public JdbcCursorItemReader<WeatherRiskDto> jdbcCursorItemReader(){
-    JdbcCursorItemReader<WeatherRiskDto> reader3= new JdbcCursorItemReader<>();
-            reader3.setSql("SELECT weatherRiskDto.location, YEAR(weatherRiskDto.date) as year,MONTH(weatherRiskDto.date) as month, COUNT(weatherRiskDto.temperature) as numberMeasurements, AVG(weatherRiskDto.temperature) as average" +
-                    " FROM weather AS weatherRiskDto "+
-                   "GROUP BY weatherRiskDto.location"
-                   /* ",YEAR(weatherRiskDto.date),MONTH(weatherRiskDto.date) ORDER BY weatherRiskDto.location"*/);
-            reader3.setDataSource(dataSource);
-            reader3.setFetchSize(100);
-            reader3.setRowMapper(new RowMapperStep3());
-            return reader3;
-    }
-
+//    confiuracion Reader para el step 4
     @Bean
     public JdbcCursorItemReader<WeatherRisk> jdbcCursorItemReaderCount(){
         JdbcCursorItemReader<WeatherRisk> reader4= new JdbcCursorItemReader<>();
