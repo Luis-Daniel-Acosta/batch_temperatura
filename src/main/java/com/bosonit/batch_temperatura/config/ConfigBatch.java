@@ -230,7 +230,7 @@ public class ConfigBatch {
         return reader3;
     }
 
-    //confiuracion Writer para el paso 4
+//    confiuracion Writer para el paso 4
     public FlatFileItemWriter<WeatherRisk> weatherRiskFlatFileItemWriter()
     {
         //Create reader instance

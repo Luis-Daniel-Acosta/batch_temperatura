@@ -30,6 +30,7 @@ public class WeatherRisk {
     private String risk;
 
     @OneToOne
+    @JoinColumn(name="id")
     private Weather weather;
 
     public WeatherRisk(String location
