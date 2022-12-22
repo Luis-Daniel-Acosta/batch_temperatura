@@ -68,22 +68,16 @@ public class ConfigBatch {
     public WeatherItemProcessorListener weatherItemProcessorListener(){return new WeatherItemProcessorListener();}
     @Bean
     public WeatherItemWriterListener weatherItemWriterListener(){return new WeatherItemWriterListener();}
-
     @Bean
     public WeatherRiskItemWriteStep3 weatherRiskItemWriteStep3(){return new WeatherRiskItemWriteStep3();}
-
     @Bean
     public WeatherReaderStep1 weatherReaderStep1(){return new WeatherReaderStep1();}
-
     @Bean
     public WeatherWriteStep2 weatherWriteStep2(){return new WeatherWriteStep2();}
-
     @Bean
     public WeatherReaderStep3 weatherReaderStep3(){return new WeatherReaderStep3();}
-
     @Bean
     public WeatherWriteStep4 weatherWriteStep4(){return new WeatherWriteStep4();}
-
     @Bean
     public WeatherReaderStep4 weatherReaderStep4(){return new WeatherReaderStep4();}
 
@@ -120,7 +114,6 @@ public class ConfigBatch {
                 .writer(writer)
                 .build();
     }
-
     @Bean
     public Step step2(){
         return stepBuilderFactory.get("step2")
@@ -130,7 +123,6 @@ public class ConfigBatch {
                 .writer(weatherWriteStep2().weatherFlatFileItemWriter())
                 .build();
     }
-
     @Bean
     public Step step3(){
         return stepBuilderFactory.get("step3")
@@ -144,6 +136,7 @@ public class ConfigBatch {
     public Step step4(){
         return stepBuilderFactory.get("step4")
                 .<WeatherRisk, WeatherRisk>chunk(100)
+                .listener(weatherItemWriterListener())
                 .reader(weatherReaderStep4().jdbcCursorItemReaderCount())
                 .processor(new WeaterItemProcessorStep4())
                 .writer(weatherWriteStep4().weatherRiskFlatFileItemWriter())
