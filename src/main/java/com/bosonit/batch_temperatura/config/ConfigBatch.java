@@ -13,8 +13,9 @@ import com.bosonit.batch_temperatura.job.step2.weaterItemProcessorStep2;
 import com.bosonit.batch_temperatura.job.step3.WeatherItemProcessorStep3;
 import com.bosonit.batch_temperatura.job.step3.WeatherReaderStep3;
 import com.bosonit.batch_temperatura.job.step3.WeatherRiskItemWriteStep3;
-import com.bosonit.batch_temperatura.job.step4.RowMapperStep4;
 import com.bosonit.batch_temperatura.job.step4.WeaterItemProcessorStep4;
+import com.bosonit.batch_temperatura.job.step4.WeatherReaderStep4;
+import com.bosonit.batch_temperatura.job.step4.WeatherWriteStep4;
 import com.bosonit.batch_temperatura.listener.WeatherItemProcessorListener;
 import com.bosonit.batch_temperatura.listener.WeatherItemReaderListener;
 import com.bosonit.batch_temperatura.listener.WeatherItemWriterListener;
@@ -26,15 +27,9 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.database.JdbcCursorItemReader;
-import org.springframework.batch.item.file.FlatFileItemWriter;
-import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
-import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import javax.sql.DataSource;
 
 
@@ -56,7 +51,6 @@ public class ConfigBatch {
 
     @Autowired
     RespositoryWeatherRisk respositoryWeatherRisk;
-
 
     @Bean
     public WeatherItemReader weatherItemReader(){return new WeatherItemReader();
@@ -87,14 +81,12 @@ public class ConfigBatch {
     @Bean
     public WeatherReaderStep3 weatherReaderStep3(){return new WeatherReaderStep3();}
 
+    @Bean
+    public WeatherWriteStep4 weatherWriteStep4(){return new WeatherWriteStep4();}
 
+    @Bean
+    public WeatherReaderStep4 weatherReaderStep4(){return new WeatherReaderStep4();}
 
-//    @Value("classpath*:/input/data.csv")
-//    private Resource[] inputResources;
-
-//    private Resource outputResource = new FileSystemResource("output/outputDataError.csv");
-
-    private Resource getOutputResource= new FileSystemResource("output/dataTemperature.csv");
 
 
     @Bean
@@ -152,118 +144,9 @@ public class ConfigBatch {
     public Step step4(){
         return stepBuilderFactory.get("step4")
                 .<WeatherRisk, WeatherRisk>chunk(100)
-                .reader(jdbcCursorItemReaderCount())
+                .reader(weatherReaderStep4().jdbcCursorItemReaderCount())
                 .processor(new WeaterItemProcessorStep4())
-                .writer(weatherRiskFlatFileItemWriter())
+                .writer(weatherWriteStep4().weatherRiskFlatFileItemWriter())
                 .build();
     }
-
-//    @Bean
-//    public MultiResourceItemReader<Weather> multiResourceItemReader()
-//    {    MultiResourceItemReader<Weather> resourceItemReader = new MultiResourceItemReader<Weather>();
-//        resourceItemReader.setResources(inputResources);
-//        resourceItemReader.setDelegate(readerr());
-//        return resourceItemReader;
-//    }
-
-//    Configuracion de Reader para el paso 1
-//    @SuppressWarnings({ "rawtypes", "unchecked" })
-//    @Bean
-//    public FlatFileItemReader<Weather> readerr()
-//    {
-//        //Create reader instance
-//        FlatFileItemReader<Weather> reader = new FlatFileItemReader<Weather>();
-//        //Set number of lines to skips. Use it if file has header rows.
-//        reader.setLinesToSkip(1);
-//        //Configure how each line will be parsed and mapped to different values
-//        reader.setLineMapper(new DefaultLineMapper() {
-//            {
-//                //3 columns in each row
-//                setLineTokenizer(new DelimitedLineTokenizer() {
-//                    {
-//                        setNames(new String[] { "Location", "Date", "Temperature" });
-//                    }
-//                });
-//                //Set values in Employee class
-//                setFieldSetMapper(new BeanWrapperFieldSetMapper<Weather>() {
-//                    {
-//                        setTargetType(Weather.class);
-//                    }
-//                });
-//            }
-//        });
-//        return reader;
-//    }
-
-
-// confiuracion Writer para el paso 2
-//    public FlatFileItemWriter<WeatherDto> weatherFlatFileItemWriter()
-//    {
-//        //Create reader instance
-//        FlatFileItemWriter<WeatherDto> writeDto = new FlatFileItemWriter<>();
-//        writeDto.setResource(outputResource);
-//        //All job repetitions should "append" to same output file
-//        writeDto.setAppendAllowed(true);
-//        //Configure how each line will be parsed and mapped to different values
-//        writeDto.setLineAggregator(new DelimitedLineAggregator<WeatherDto>() {
-//            {
-//                setDelimiter(",");
-//                setFieldExtractor(new BeanWrapperFieldExtractor<WeatherDto>() {
-//                    {
-//                        setNames(new String[] { "location", "date", "temperature" });
-//                    }
-//                });
-//            }
-//        });
-//        return writeDto;
-//    }
-
-//    confiuracion Reader para el paso 3
-//    @Bean
-//    public JdbcCursorItemReader<WeatherRiskDto> jdbcCursorItemReader(){
-//        JdbcCursorItemReader<WeatherRiskDto> reader3= new JdbcCursorItemReader<>();
-//        reader3.setSql("SELECT weatherRiskDto.location, YEAR(weatherRiskDto.date) as year,MONTH(weatherRiskDto.date) as month, COUNT(weatherRiskDto.temperature) as numberMeasurements, AVG(weatherRiskDto.temperature) as average" +
-//                        " FROM weather AS weatherRiskDto "+
-//                        "GROUP BY weatherRiskDto.location");
-//        reader3.setDataSource(dataSource);
-//        reader3.setFetchSize(100);
-//        reader3.setRowMapper(new RowMapperStep3());
-//        return reader3;
-//    }
-
-//    confiuracion Writer para el paso 4
-    public FlatFileItemWriter<WeatherRisk> weatherRiskFlatFileItemWriter()
-    {
-        //Create reader instance
-        FlatFileItemWriter<WeatherRisk> writeDto = new FlatFileItemWriter<>();
-        writeDto.setResource(getOutputResource);
-        //All job repetitions should "append" to same output file
-        writeDto.setAppendAllowed(true);
-        //Configure how each line will be parsed and mapped to different values
-        writeDto.setLineAggregator(new DelimitedLineAggregator<WeatherRisk>() {
-            {
-                setDelimiter(",");
-                setFieldExtractor(new BeanWrapperFieldExtractor<WeatherRisk>() {
-                    {
-                        setNames(new String[] { "location", "month", "year","numberMeasurements","averageTemperature","risk" });
-                    }
-                });
-            }
-        });
-        return writeDto;
-    }
-
-//    confiuracion Reader para el step 4
-    @Bean
-    public JdbcCursorItemReader<WeatherRisk> jdbcCursorItemReaderCount(){
-        JdbcCursorItemReader<WeatherRisk> reader4= new JdbcCursorItemReader<>();
-        reader4.setSql("SELECT t.location,t.year,t.month,t.numberMeasurements,t.averageTemperature,t.risk"
-                + " FROM weather_risk AS t");
-        reader4.setDataSource(dataSource);
-        reader4.setFetchSize(100);
-        reader4.setRowMapper(new RowMapperStep4());
-        return reader4;
-    }
-
-
 }
